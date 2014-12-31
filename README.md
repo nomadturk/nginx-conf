@@ -1,4 +1,4 @@
 nginx-conf
 ==========
 
-Nginx Config
+Here lies my personal Nginx template.
