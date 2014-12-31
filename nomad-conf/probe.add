@@ -1,0 +1,7 @@
+  # Do not log Varnish probe for health check
+  # A probe.htm is required at the root
+  location /probe.htm {
+    allow all;
+    log_not_found off;
+    access_log off;
+  }	
