@@ -1,0 +1,40 @@
+  # Aggressive caching for static files
+	location ~* \.(_:asf|css|js|asx|wax|wmv|wmx|avi|bmp|class|divx|doc|docx|eot|exe|gif|gz|gzip|ico|jpg|jpeg|jpe|mdb|mid|midi|mov|qt|mp3|m4a|mp4|m4v|mpeg|mpg|mpe|mpp|odb|odc|odf|odg|odp|ods|odt|ogg|ogv|otf|pdf|png|pot|pps|ppt|pptx|ra|ram|svg|svgz|swf|tar|t?gz|tif|tiff|ttf|wav|webm|wma|woff|wri|xla|xls|xlsx|xlt|xlw|zip)(\?[0-9]+)?$ {
+		expires 31536000s;
+		access_log off;
+		log_not_found off;
+  #		add_header Vary Accept-Encoding;
+		add_header Pragma public;
+		add_header Cache-Control "max-age=31536000, public";
+  }
+
+	# Rewrite for versioned CSS+JS via filemtime
+	location ~* ^.+\.(css|js)(\?[0-9]+)?$ {
+	  rewrite ^(.+)\.(\d+)\.(css|js)$ $1.$3 last;
+		expires 31536000s;
+		access_log off;
+		log_not_found off;
+		add_header Content-Encoding gzip;
+		add_header Pragma public;
+		add_header Cache-Control "max-age=31536000, public";
+	}
+	
+	# wordpress-w3-total-cache.conf
+	location ~ \.(asf|asx|wax|wmv|wmx|avi|bmp|class|divx|doc|docx|exe|gif|gz|gzip|ico|jpg|jpeg|jpe|mdb|mid|midi|mov|qt|mp3|m4a|mp4|m4v|mpeg|mpg|mpe|mpp|odb|odc|odf|odg|odp|ods|odt|ogg|pdf|png|pot|pps|ppt|pptx|ra|ram|swf|tar|tif|tiff|wav|wma|wri|xla|xls|xlsx|xlt|xlw|zip)$ {
+	  expires max;
+    access_log off;
+    log_not_found off;
+    add_header Pragma public;
+    add_header Cache-Control "max-age=31536000, public";
+	  break;
+	}
+
+  location ~ \.(asf|asx|wax|wmx|bmp|class|doc|docx|gif|ico|jpg|jpeg|jpe|mdb|mid|midi|mpg|mpe|mpp|odb|odc|odf|odg|odp|ods|odt|ogg|pdf|png|pot|pps|ppt|pptx|ra|ram|swf|tar|tif|tiff|wav|wma|wri|xla|xls|xlsx|xlt|xlw|zip)$ {
+    expires 31536000s;
+    access_log off;
+    log_not_found off;
+    add_header Content-Encoding gzip;
+    add_header Pragma public;
+    add_header Cache-Control "max-age=31536000, public";
+	}
+    ############################################################################ CACHE STATIC
