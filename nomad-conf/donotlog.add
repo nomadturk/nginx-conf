@@ -1,0 +1,13 @@
+ # Do not log favicon.ico requests
+  location = /favicon.ico {
+    allow all;
+    log_not_found off;
+    access_log off;
+  }
+ 
+  # Do not log robots.txt requests
+  location = /robots.txt {
+    allow all;
+    log_not_found off;
+    access_log off;
+  }
