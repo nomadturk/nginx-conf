@@ -1,0 +1,37 @@
+  ############################################################################ WORDPRESS START
+  location / { 
+    index index.php; 
+
+    # the magic. this is the equivalent of all those lines you use for mod_rewrite in Apache
+    # if the request is for "/foo", we'll first try it as a file. then as a directory. and finally
+    # we'll assume its some sort of "clean" url and hand it to index.php so our CMS can work with it
+    try_files $uri $uri/ /index.php$is_args$args;
+    # try_files $uri $uri/ /index.php?q=$uri&$args; 
+    # try_files $uri/ /index.php$is_args$args;
+
+    if (!-e $request_filename) {        rewrite ^(.+)$ /index.php?q=$1&$2 last;   	 }
+  }
+
+  # Common deny or internal locations, to help prevent access to not-public areas
+  location ~* wp-admin/includes { deny all; }
+  location ~* wp-includes/theme-compat/ { deny all; }
+  location ~* wp-includes/js/tinymce/langs/.*\.php { deny all; }
+  location /wp-content/ { internal; }
+  location /wp-includes/ { internal; }
+  location ~ /(\.|wp-config.php|readme.html|license.txt) { deny all; }
+
+  # Add trailing slash to */wp-admin requests.
+  # rewrite /wp-admin$ $scheme://$host$uri/ permanent;
+
+  # Prevent any potentially-executable files in the uploads directory from being executed
+  # by forcing their MIME type to text/plain
+  location ~* ^/wp-content/uploads/.*.(html|htm|shtml|php|js|swf)$ {
+    types { }
+    default_type text/plain;
+  }
+  
+  location ~* ^/wp-includes/uploads/.*.(html|htm|shtml|php|js|swf)$ {
+    types { }
+    default_type text/plain;
+  }
+  ############################################################################ WORDPRESS END
