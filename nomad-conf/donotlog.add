@@ -1,13 +1,4 @@
- # Do not log favicon.ico requests
-  location = /favicon.ico {
-    allow all;
-    log_not_found off;
-    access_log off;
-  }
- 
-  # Do not log robots.txt requests
-  location = /robots.txt {
-    allow all;
-    log_not_found off;
-    access_log off;
-  }
+location = /robots.txt  { access_log off; log_not_found off; }
+location = /favicon.ico { access_log off; log_not_found off; }
+location ~ /\.          { access_log off; log_not_found off; deny all; }
+location ~ ~$           { access_log off; log_not_found off; deny all; }
