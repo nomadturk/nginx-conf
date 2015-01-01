@@ -21,4 +21,24 @@
     types { }
     default_type text/plain;
   }
+  
+  location ~* ^/wp-content/cache/page_enhanced.*html$ {
+		expires max;
+		charset utf-8;
+		add_header Vary "Accept-Encoding, Cookie";
+		add_header Pragma public;
+		add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+	}
+ 
+	location ~* ^/wp-content/cache/page_enhanced.*gzip$ {
+		expires max;
+		gzip off;
+		types {}
+		charset utf-8;
+		default_type text/html;
+		add_header Vary "Accept-Encoding, Cookie";
+		add_header Content-Encoding gzip;
+		add_header Pragma public;
+		add_header Cache-Control "public, must-revalidate, proxy-revalidate";
+	}
   ############################################################################ WORDPRESS END
