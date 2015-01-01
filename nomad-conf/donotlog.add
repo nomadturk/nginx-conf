@@ -1,4 +1,7 @@
+# remove the robots line if you want to use wordpress' virtual robots.txt
 location = /robots.txt  { access_log off; log_not_found off; }
 location = /favicon.ico { access_log off; log_not_found off; }
+# this prevents hidden files (beginning with a period) from being served
 location ~ /\.          { access_log off; log_not_found off; deny all; }
+# this prevents file leftovers to be seen, such as vim temp files.
 location ~ ~$           { access_log off; log_not_found off; deny all; }
