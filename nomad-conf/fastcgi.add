@@ -94,9 +94,8 @@
 		# you can use keep alive connections to the upstream be it
 		# FastCGI or Apache. If that's not the case comment out the line below.
 		fastcgi_keep_conn on; # keep alive to the FCGI upstream
-		
+}
 	location ~ /purge(/.*) {
 	    fastcgi_cache_purge microcache "$scheme$host$request_uri$request_method";
 	}
-}
     ###################################### FASTCGI END		
