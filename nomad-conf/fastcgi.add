@@ -77,10 +77,6 @@
 		fastcgi_param  PATH_TRANSLATED    $document_root$fastcgi_path_info;
 		fastcgi_intercept_errors off;
 		include fastcgi_params;
-		fastcgi_param  QUERY_STRING     $query_string;
-		fastcgi_param  REQUEST_METHOD   $request_method;
-		fastcgi_param  CONTENT_TYPE     $content_type;
-		fastcgi_param  CONTENT_LENGTH   $content_length;
 		fastcgi_ignore_client_abort     off;
 		fastcgi_connect_timeout 60;
 		fastcgi_send_timeout 180;
