@@ -15,10 +15,7 @@
 	
 	# Drop no cache cookie if need be
 	# (for some reason, add_header fails if included in prior if-block)
-	if ($no_cache = "1") {
-		add_header Set-Cookie "_mcnc=1; Max-Age=2; Path=/";
-		add_header X-Microcachable "0";
-	}
+
 	# Bypass cache if no-cache cookie is set
 	if ($http_cookie ~* "_mcnc") {
 		set $no_cache "1";
@@ -90,6 +87,10 @@
 		# you can use keep alive connections to the upstream be it
 		# FastCGI or Apache. If that's not the case comment out the line below.
 		fastcgi_keep_conn on; # keep alive to the FCGI upstream
+		if ($no_cache = "1") {
+		add_header Set-Cookie "_mcnc=1; Max-Age=2; Path=/";
+		add_header X-Microcachable "0";
+	}
 }
 	location ~ /purge(/.*) {
 	    fastcgi_cache_purge microcache "$scheme$host$request_uri$request_method";
