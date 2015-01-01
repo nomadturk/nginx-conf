@@ -7,6 +7,7 @@ server {
   	server_name  example.com;
   	root /usr/local/nginx/nginx/html/;
 	# root /var/www/example.com;
+	index  index.php index.html index.htm;
 
   	server_name_in_redirect off;
   	autoindex off;
@@ -14,8 +15,6 @@ server {
     	
 	###############################################
 	location / {
-	index  index.php index.html index.htm;
-		
 		# the magic. this is the equivalent of all those lines you use for mod_rewrite in Apache
 		# if the request is for "/foo", we'll first try it as a file. then as a directory. and finally
 		# we'll assume its some sort of "clean" url and hand it to index.php so our CMS can work with it
