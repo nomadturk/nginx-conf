@@ -52,3 +52,13 @@ pagespeed StatisticsLogging off;
 location ~ "\.pagespeed\.([a-z]\.)?[a-z]{2}\.[^.]{10}\.[^.]+" {
 	add_header "" "";
 }
+
+    pagespeed DownstreamCachePurgeLocationPrefix http://127.0.0.1:80/;
+    pagespeed DownstreamCachePurgeMethod PURGE;
+    pagespeed DownstreamCacheRewrittenPercentageThreshold 95;
+    
+    # let's speed up PageSpeed by storing it in the super duper fast memcached
+    pagespeed MemcachedThreads 1;
+    pagespeed MemcachedServers "localhost:11211";
+    # Respect Vary Headers. Uncomment to enable
+    pagespeed RespectVary on;
