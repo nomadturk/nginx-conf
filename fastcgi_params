@@ -23,3 +23,5 @@ fastcgi_param	HTTPS			$https if_not_empty;
 
 # PHP only, required if PHP was built with --enable-force-cgi-redirect
 fastcgi_param	REDIRECT_STATUS		200;
+fastcgi_param  PATH_INFO          $fastcgi_path_info;
+fastcgi_param  PATH_TRANSLATED    $document_root$fastcgi_path_info;
