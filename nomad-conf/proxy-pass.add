@@ -1,7 +1,11 @@
   location / {
+  # Pass a bunch of headers to the downstream server, so they'll know what's going on.
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header Referer $http_referer;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_set_header Host $http_host;
+    proxy_http_version          1.1;
     proxy_intercept_errors on;
     proxy_pass 127.0.0.1:8080;
     proxy_redirect default;
