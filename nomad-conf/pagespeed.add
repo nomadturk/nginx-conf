@@ -1,77 +1,33 @@
-############################################################################ PAGESPEED START
-    # Enables Pagespeed
-    pagespeed on;
-	
-    # pagespeed UsePerVHostStatistics on;
-    pagespeed InPlaceResourceOptimization off;
-    pagespeed Statistics off;
-    pagespeed StatisticsLogging off;
-    pagespeed LogDir /var/log/pagespeed;
-    pagespeed StatisticsLoggingIntervalMs 60000;
-    pagespeed StatisticsLoggingMaxFileSizeKb 1024;
+# Turning the module on and off
+pagespeed on;
 
-    # Ensure requests for pagespeed optimized resources go to the pagespeed handler
-    # and no extraneous headers get set.
-    location ~ "\.pagespeed\.([a-z]\.)?[a-z]{2}\.[^.]{10}\.[^.]+" {
-      add_header "" "";
-    }
-    location ~ "\.pagespeed\.([a-z]\.)?[a-z]{2}\.[^.]{10}\.[^.]+" { add_header "" ""; }
-    location ~ "^/ngx_pagespeed_static/" { }
-    location ~ "^/ngx_pagespeed_beacon$" { }
-    location /ngx_pagespeed_statistics { allow 127.0.0.1; allow 213.74.60.33; deny all; }
-    location /ngx_pagespeed_global_statistics { allow 127.0.0.1; allow 213.74.60.33; deny all; }
-    location /ngx_pagespeed_message { allow 127.0.0.1;  allow 213.74.60.33; deny all; }
-    location /pagespeed_console { allow 127.0.0.1; allow 213.74.60.33; deny all; }
-     
-    # Enbables the modules necessary to run pagespeed
-    pagespeed RewriteLevel CoreFilters;
-#    pagespeed EnableFilters recompress_images,resize_images,rewrite_images,inline_images,dedup_inlined_images;
-#    pagespeed EnableFilters recompress_webp,convert_gif_to_png,convert_png_to_jpeg,convert_jpeg_to_progressive,recompress_png,recompress_jpeg,strip_image_color_profile,strip_image_meta_data,jpeg_subsampling;
-#    pagespeed EnableFilters insert_image_dimensions,combine_css,rewrite_css,fallback_rewrite_css_urls,combine_javascript;
-#    pagespeed EnableFilters collapse_whitespace,remove_comments,remove_quotes,rewrite_style_attributes_with_url;
-#    pagespeed EnableFilters extend_cache,combine_heads,move_css_above_scripts,move_css_to_head;
-#    pagespeed EnableFilters make_google_analytics_async,inline_google_font_css;
-    pagespeed EnableFilters rewrite_javascript,lazyload_images,insert_dns_prefetch;
-    pagespeed ImagePreserveURLs on;	
-    pagespeed LazyloadImagesAfterOnload on;
-    pagespeed LazyloadImagesBlankUrl "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-    pagespeed ImageRecompressionQuality                    80;
-    #pagespeed ImageResolutionLimitBytes              32000000;
-    pagespeed JpegRecompressionQuality                     -1;
-    pagespeed PreserveUrlRelativity on;
-    # Enabling JsPreserveURLs will forbid the use of the following filters: canonicalize_javascript_libraries, combine_javascript, defer_javascript, extend_cache_javascript, inline_javascript, and outline_javascript.
-    pagespeed JsPreserveURLs On;
-    # Enabling ImagePreserveURLs will forbid the use of the following filters: inline_preview_images, lazyload_images, extend_cache_images, inline_images, and sprite_images.
-    pagespeed ImagePreserveURLs On;
-    # Enabling CssPreserveURLs will forbid the use of the following filters: combine_css, extend_cache_css, inline_css, inline_import_to_link, and outline_css.
-    pagespeed CssPreserveURLs On;
-    pagespeed CriticalImagesBeaconEnabled false;
-    pagespeed CombineAcrossPaths off;
-    # In some sites, the URL path layout or network deployment strategy may not allow for consistent configuration between HTML and images. PageSpeed offers a workaround for such sites by encoding relevant configuration settings for each rewritten resource into the URLs:
-    pagespeed AddOptionsToUrls off;
+# Configuring PageSpeed Filters
+pagespeed RewriteLevel PassThrough;
 
-    pagespeed DownstreamCachePurgeLocationPrefix http://127.0.0.1:80/;
-    pagespeed DownstreamCachePurgeMethod PURGE;
-    pagespeed DownstreamCacheRewrittenPercentageThreshold 95;
+# Needs to exist and be writable by nginx.  Use tmpfs for best performance.
+pagespeed MemcachedServers "127.0.0.1:11211";
+pagespeed FileCachePath /var/ngx_pagespeed_cache;
 
-    pagespeed ForceCaching on;
- 
-    #By default, PageSpeed serves all HTML with Cache-Control: no-cache, max-age=0 because the transformations made to the page may not be cacheable for extended periods of time.
-    #If you want to force PageSpeed to leave the original HTML caching headers you can add:
-    pagespeed ModifyCachingHeaders on;
+# PageSpeed Admin
+pagespeed StatisticsPath /ngx_pagespeed_statistics;
+pagespeed GlobalStatisticsPath /ngx_pagespeed_global_statistics;
+pagespeed MessagesPath /ngx_pagespeed_message;
+pagespeed ConsolePath /pagespeed_console;
+pagespeed AdminPath /pagespeed_admin;
+pagespeed GlobalAdminPath /pagespeed_global_admin;
 
-    # let's speed up PageSpeed by storing it in the super duper fast memcached
-    pagespeed MemcachedThreads 1;
-    pagespeed MemcachedServers "localhost:11211";
-    # Respect Vary Headers. Uncomment to enable
-    pagespeed RespectVary on;
-    # Create a mapping from https://www.example.com -> http://localhost
-    # This allows pagespeed to generate files on a non https domain, and for our https domain to serve them
-    # pagespeed MapOriginDomain "http://localhost" "https://www.example.com";
-    # Declare where pagespeed resources should be stored. I like /tmp, but you may prefer something
-    # that can survive a reboot of your server.
-    #pagespeed FileCachePath /tmp;
-    
-    #Biraz da gulelim
-    pagespeed XHeaderValue "Powered by Sucuk Ekmek";
-    ############################################################################ PAGESPEED END
+# PageSpeed Cache Purge
+pagespeed EnableCachePurge on;
+pagespeed PurgeMethod PURGE;
+
+pagespeed LazyloadImagesAfterOnload on;
+pagespeed LazyloadImagesBlankUrl "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
+pagespeed Statistics off;
+pagespeed StatisticsLogging off;
+
+# Ensure requests for pagespeed optimized resources go to the pagespeed handler
+# and no extraneous headers get set.
+location ~ "\.pagespeed\.([a-z]\.)?[a-z]{2}\.[^.]{10}\.[^.]+" {
+	add_header "" "";
+}
