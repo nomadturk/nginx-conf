@@ -25,7 +25,8 @@ server {
   	# Path for the website
   	root /var/www/;
 	# root /var/www/example.com;
-	
+	# http://nginx.com/resources/admin-guide/compression-and-decompression/
+	gunzip on;
 	index  index.php index.html index.htm;
 
   	server_name_in_redirect off;
