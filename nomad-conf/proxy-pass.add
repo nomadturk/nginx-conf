@@ -1,3 +1,4 @@
+  proxy_cache proxy;
   location / {
   # Pass a bunch of headers to the downstream server, so they'll know what's going on.
     proxy_set_header Host $host;
