@@ -1,16 +1,39 @@
+##Let's redirect www requests to non-www site.
+#server {
+#  # don't forget to tell on which port this server listens
+#  listen [::]:80;
+#  listen 80;
+#
+#  # listen on the www host
+#  server_name www.example.com;
+#
+#  # and redirect to the non-www host (declared below)
+#  # do no forget to replace example.com 
+#  return 301 $scheme://example.com$request_uri;
+#}
+
 server {
-	listen     *:80;
-	listen   [::]:801;
+	# listen     *:80;
+	listen 80 deferred; # for Linux
+  	# listen 80 accept_filter=httpready; # for FreeBSD
+	listen   [::]:80;
 	# listen   [::]:801 default_server ipv6only=off; ## listen for ipv6
 	
 	# our primary server name is the first, aliases simply come after it. you can also include wildcards like *.example.com
   	server_name  example.com;
+  	
+  	# Path for the website
   	root /var/www/;
 	# root /var/www/example.com;
+	
 	index  index.php index.html index.htm;
 
   	server_name_in_redirect off;
+  	
+  	# Remove auto listing of directories. 
   	autoindex off;
+  	# You can enable this for prettier directory listings if you enable autoindex.
+  	fancyindex off;
 	charset utf-8;
     	
 	###############################################
