@@ -74,7 +74,8 @@
                 if (!-f $document_root$fastcgi_script_name) {
                         return 404;
                 }
-		fastcgi_param  PATH_TRANSLATED    $document_root$fastcgi_path_info;
+                # The below should be disabled if cgi.fix_pathinfo is set to 0 at /etc/php5/fpm/php.ini
+		# fastcgi_param  PATH_TRANSLATED    $document_root$fastcgi_path_info;
 		fastcgi_intercept_errors off;
 		include fastcgi_params;
 		fastcgi_param  QUERY_STRING     $query_string;
