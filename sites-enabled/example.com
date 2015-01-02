@@ -5,7 +5,7 @@ server {
 	
 	# our primary server name is the first, aliases simply come after it. you can also include wildcards like *.example.com
   	server_name  example.com;
-  	root /usr/local/nginx/nginx/html/;
+  	root /var/www/;
 	# root /var/www/example.com;
 	index  index.php index.html index.htm;
 
