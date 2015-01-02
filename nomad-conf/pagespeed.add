@@ -6,12 +6,14 @@ pagespeed on;
     pagespeed InPlaceResourceOptimization off;
     pagespeed Statistics off;
     pagespeed StatisticsLogging off;
+    pagespeed RateLimitBackgroundFetches off;
     pagespeed LogDir /var/log/pagespeed;
     pagespeed StatisticsLoggingIntervalMs 60000;
     pagespeed StatisticsLoggingMaxFileSizeKb 1024;
     
 # Configuring PageSpeed Filters
-pagespeed RewriteLevel PassThrough;
+# PassThrough just let them go unfiltered, CoreFilters enables the basic, safe filters
+pagespeed RewriteLevel CoreFilters;
 
 # Needs to exist and be writable by nginx.  Use tmpfs for best performance.
 pagespeed MemcachedServers "127.0.0.1:11211";
