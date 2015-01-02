@@ -3,7 +3,7 @@ pagespeed on;
 
 
     # pagespeed UsePerVHostStatistics on;
-    pagespeed InPlaceResourceOptimization off;
+    pagespeed InPlaceResourceOptimization on;
     pagespeed Statistics off;
     pagespeed StatisticsLogging off;
     pagespeed RateLimitBackgroundFetches off;
@@ -18,6 +18,11 @@ pagespeed RewriteLevel CoreFilters;
 # Needs to exist and be writable by nginx.  Use tmpfs for best performance.
 pagespeed MemcachedServers "127.0.0.1:11211";
 pagespeed FileCachePath /var/ngx_pagespeed_cache;
+pagespeed FileCacheSizeKb            409600;
+pagespeed FileCacheCleanIntervalMs   3600000;
+pagespeed FileCacheInodeLimit        500000;
+pagespeed LRUCacheKbPerProcess     8192;
+pagespeed LRUCacheByteLimit        16384;
 
     # Ensure requests for pagespeed optimized resources go to the pagespeed handler
     # and no extraneous headers get set.
@@ -62,5 +67,6 @@ location ~ "\.pagespeed\.([a-z]\.)?[a-z]{2}\.[^.]{10}\.[^.]+" {
     # let's speed up PageSpeed by storing it in the super duper fast memcached
     pagespeed MemcachedThreads 1;
     pagespeed MemcachedServers "localhost:11211";
+    pagespeed MemcachedTimeoutUs 100000;
     # Respect Vary Headers. Uncomment to enable
     pagespeed RespectVary on;
