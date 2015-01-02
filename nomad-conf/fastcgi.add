@@ -1,97 +1,98 @@
-        set $cache_uri $request_uri;
-        if ($request_method = POST) {
-                set $cache_uri 'null cache';
-        }
-
-        if ($query_string != "") {
-                set $cache_uri 'null cache';
-        }
-
-        set $no_cache "";
-        # If non GET/HEAD, don't cache and mark user as uncacheable for 1 second via cookie
-        if ($request_method !~ ^(GET|HEAD)$) {
-        set $no_cache "1";
-        }
-
-        # Drop no cache cookie if need be
-        # (for some reason, add_header fails if included in prior if-block)
-
-        # Bypass cache if no-cache cookie is set
-        if ($http_cookie ~* "_mcnc") {
-                set $no_cache "1";
-        }
-
-        # Don't use the cache for logged in users or recent commenters
-        if ($http_cookie ~* "comment_author|wordpress_[a-f0-9]+|wp-postpass|wordpress_no_cache|wordpress_logged_in") {
-                set $cache_uri 'null cache';
-        }
-
-        # Don't cache uris containing the following segments
-        if ($request_uri ~* "(/wp-admin/|/xmlrpc.php|/wp-(app|cron|login|register|mail).php|wp-.*.php|/feed/|index.php|wp-com$
-                set $cache_uri 'null cache';
-        }
-
-        ## Forward paths like /js/index.php/x.js to relevant handler
-        location ~ \.php/ {
-        rewrite ^(.*\.php)/ $1 last;
-        
-      	if ($cache_uri != "null cache") {
-		add_header X-Cache_Debug "$cache_uri $cookie_nocache $arg_nocache$arg_comment $http_pragma $http_authorization";
-		set $no_cache 0;
+	set $cache_uri $request_uri;
+	if ($request_method = POST) {
+		set $cache_uri 'null cache';
 	}
+	
+	if ($query_string != "") {
+		set $cache_uri 'null cache';
+	} 
+	
+	# Don't use the cache for logged in users or recent commenters
+	if ($http_cookie ~* "comment_author|wordpress_[a-f0-9]+|wp-postpass|wordpress_logged_in") {
+		set $cache_uri 'null cache';
+	}
+
+	# Don't cache uris containing the following segments
+	if ($request_uri ~* "(/wp-admin/|/xmlrpc.php|/wp-(app|cron|login|register|mail).php|wp-.*.php|/feed/|index.php|wp-comments-popup.php|wp-links-opml.php|wp-locations.php|sitemap(_index)?.xml|[a-z0-9_-]+-sitemap([0-9]+)?.xml)") {
+		set $cache_uri 'null cache';
+	}
+	
+	## Forward paths like /js/index.php/x.js to relevant handler
+	location ~ \.php/ {
+        rewrite ^(.*\.php)/ $1 last;
     }
 	
     # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
     location ~ \.php(.*)$ {
-                # Bypass cache if flag is set
-                fastcgi_no_cache $no_cache;
-                fastcgi_cache_bypass $no_cache;
-                fastcgi_cache_bypass $http_pragma;
-                fastcgi_cache microcache;
-                fastcgi_cache_key $scheme$host$request_uri$request_method;
-                fastcgi_cache_valid 404 30m;
-                fastcgi_cache_valid 200 301 302 20m;
-                fastcgi_cache_valid  60m;
-                fastcgi_cache_use_stale error timeout invalid_header http_500;
-                fastcgi_cache_use_stale updating;
-                fastcgi_pass_header Set-Cookie;
-                fastcgi_pass_header Cookie;
-                fastcgi_ignore_headers Cache-Control Expires Set-Cookie;
-                fastcgi_max_temp_file_size 10M;
-               fastcgi_pass 127.0.0.1:9000;
-#                fastcgi_pass unix:/var/run/php5-fpm.sock;
-                fastcgi_index index.php;
 
+		set $no_cache "";
+		# If non GET/HEAD, don't cache and mark user as uncacheable for 1 second via cookie
+		if ($request_method !~ ^(GET|HEAD)$) {
+		set $no_cache "1";
+		}
+		
+		# Drop no cache cookie if need be
+		# (for some reason, add_header fails if included in prior if-block)
+		if ($no_cache = "1") {
+			add_header Set-Cookie "_mcnc=1; Max-Age=2; Path=/";
+			add_header X-Microcachable "0";
+		}
+		# Bypass cache if no-cache cookie is set
+		if ($http_cookie ~* "_mcnc") {
+			set $no_cache "1";
+		}
+		# Bypass cache if flag is set
+		fastcgi_no_cache $no_cache;
+		fastcgi_cache_bypass $no_cache;
+		fastcgi_cache_bypass $http_pragma;
+		fastcgi_cache microcache;
+		fastcgi_cache_key $scheme$host$request_uri$request_method;
+		fastcgi_cache_valid 404 30m;
+		fastcgi_cache_valid 200 301 302 20s;
+		fastcgi_cache_use_stale error timeout invalid_header http_500;
+		fastcgi_cache_use_stale updating;
+		fastcgi_pass_header Set-Cookie;
+		fastcgi_pass_header Cookie;
+		fastcgi_ignore_headers Cache-Control Expires Set-Cookie;
+		
+		if ($cache_uri != "null cache") {
+			add_header X-Cache_Debug "$cache_uri $cookie_nocache $arg_nocache$arg_comment $http_pragma $http_authorization";
+			set $no_cache 0;
+		}
+	
+		fastcgi_max_temp_file_size 10M;
+		fastcgi_pass 127.0.0.1:9000;
+		# fastcgi_pass unix:/var/run/php5-fpm.sock;
+		fastcgi_index index.php;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 
-                # Save the $fastcgi_path_info before try_files clear it
-                set $mypath $fastcgi_path_info;
-                fastcgi_param  PATH_INFO          $mypath;
-                try_files $fastcgi_script_name =404;
-                fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+		# Save the $fastcgi_path_info before try_files clear it
+		set $mypath $fastcgi_path_info;
+		fastcgi_param  PATH_INFO          $mypath;
+		try_files $fastcgi_script_name =404;
+		fastcgi_split_path_info ^(.+?\.php)(/.*)$;
                 if (!-f $document_root$fastcgi_script_name) {
                         return 404;
                 }
+		fastcgi_param  PATH_TRANSLATED    $document_root$fastcgi_path_info;
 		fastcgi_intercept_errors off;
-                fastcgi_ignore_client_abort     off;
-                fastcgi_connect_timeout 60;
-                fastcgi_send_timeout 180;
-                fastcgi_read_timeout 180;
-                fastcgi_buffers 4 256k;
-                fastcgi_buffer_size 128k;
-                fastcgi_busy_buffers_size 256k;
-                fastcgi_temp_file_write_size 256k;
-		include /etc/nginx/fastcgi_params;
-                # If you're using a Nginx version greater or equal to 1.1.4 then
-                # you can use keep alive connections to the upstream be it
-                # FastCGI or Apache. If that's not the case comment out the line below.
-                fastcgi_keep_conn on; # keep alive to the FCGI upstream
-                
-                if ($no_cache = "1") {
-                	add_header Set-Cookie "_mcnc=1; Max-Age=2; Path=/";
-                	add_header X-Microcachable "0";
-		}
+		include fastcgi_params;
+		fastcgi_param  QUERY_STRING     $query_string;
+		fastcgi_param  REQUEST_METHOD   $request_method;
+		fastcgi_param  CONTENT_TYPE     $content_type;
+		fastcgi_param  CONTENT_LENGTH   $content_length;
+		fastcgi_ignore_client_abort     off;
+		fastcgi_connect_timeout 60;
+		fastcgi_send_timeout 180;
+		fastcgi_read_timeout 180;
+		fastcgi_buffers 4 256k;
+		fastcgi_buffer_size 128k;
+		fastcgi_busy_buffers_size 256k;
+		fastcgi_temp_file_write_size 256k;
+
+		# If you're using a Nginx version greater or equal to 1.1.4 then
+		# you can use keep alive connections to the upstream be it
+		# FastCGI or Apache. If that's not the case comment out the line below.
+		fastcgi_keep_conn on; # keep alive to the FCGI upstream
 }
-	location ~ /purge(/.*) {
-	    fastcgi_cache_purge microcache "$scheme$host$request_uri$request_method";
-	}
     ###################################### FASTCGI END		
