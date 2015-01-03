@@ -5,7 +5,9 @@
 #  listen 80;
 #
 #  # listen on the www host
-#  server_name www.example.com;
+#  #server_name www.example.com;
+#  # It should work OK, just in case it doesn't work the way it was intended, use the one above.
+#  server_name *.example.com;
 #
 #  # and redirect to the non-www host (declared below)
 #  # do no forget to replace example.com 
