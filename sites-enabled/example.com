@@ -38,6 +38,13 @@ server {
   	# You can enable this for prettier directory listings if you enable autoindex.
   	fancyindex off;
 	charset utf-8;
+	
+	# Removes any trailing slashes from uris that are not directories
+	# Changes example.com/controller/ to example.com/controller
+	# Thus normalising the uris
+        if (!-d $request_filename) {
+                rewrite ^/(.+)/$ /$1 permanent;
+        }
     	
 	###############################################
 	location / {
