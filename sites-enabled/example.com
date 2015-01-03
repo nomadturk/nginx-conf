@@ -43,8 +43,10 @@ server {
 		# if the request is for "/foo", we'll first try it as a file. then as a directory. and finally
 		# we'll assume its some sort of "clean" url and hand it to index.php so our CMS can work with it
 		try_files $uri $uri/ /index.php$is_args$args;
-		if (!-e $request_filename) {        rewrite ^(.+)$ /index.php?q=$1&$2 last;   	 }
-    }
+		
+		#Some software doesn't even need the query string, and can read from REQUEST_URI (WordPress supports this, for example): http://docs.ngx.cc/en/latest/topics/tutorials/config_pitfalls.html
+		#try_files $uri $uri/ /index.php?q=$uri&$args;
+	}
 	###############################################
 	
 	# Let's Include Cache settings
