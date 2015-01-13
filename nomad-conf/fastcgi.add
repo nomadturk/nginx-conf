@@ -23,8 +23,8 @@
     }
 	
     # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
-    location ~ \.php(.*)$ {
-
+    # location ~ \.php(.*)$ {
+    location ~ \.php$ {
 		set $no_cache "";
 		# If non GET/HEAD, don't cache and mark user as uncacheable for 1 second via cookie
 		if ($request_method !~ ^(GET|HEAD)$) {
@@ -64,7 +64,8 @@
 		fastcgi_pass 127.0.0.1:9000;
 		# fastcgi_pass unix:/var/run/php5-fpm.sock;
 		fastcgi_index index.php;
-		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		# fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		# fastcgi_param SCRIPT_FILENAME $request_filename;
 
 		# Save the $fastcgi_path_info before try_files clear it
 		set $mypath $fastcgi_path_info;
