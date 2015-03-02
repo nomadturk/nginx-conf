@@ -15,10 +15,10 @@
 #}
 
 server {
-	# listen     *:80;
-	listen 80 deferred; # for Linux
+	listen     *:80;
+	#listen 80 deferred; # for Linux
   	# listen 80 accept_filter=httpready; # for FreeBSD
-	listen   [::]:80;
+	#listen   [::]:80;
 	# listen   [::]:80 default_server ipv6only=off; ## listen for ipv6
 	
 	# our primary server name is the first, aliases simply come after it. you can also include wildcards like *.example.com
