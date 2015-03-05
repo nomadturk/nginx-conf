@@ -1,8 +1,8 @@
 #Let's redirect www requests to non-www site.
 server {
   # don't forget to tell on which port this server listens
-  listen 443 ssl; # add spdy if you have nginx 1.6+
-  listen [::]:443 ssl; spdy;
+  listen 443 ssl spdy;
+  listen [::]:443 ssl spdy;
 
   # listen on the www host
   server_name www.example.com;
@@ -17,8 +17,8 @@ server {
 }
 
 server {
-  listen 443 ssl; # add spdy if you have nginx 1.6+
-  listen [::]:443 ssl; spdy;
+  listen 443 ssl spdy;			#SPDY Requires nginx 1.6+
+  listen [::]:443 ssl spdy;
   
  # Enable below with your certificates
  # ssl on;
