@@ -19,10 +19,11 @@ nginx-extras or your own compilation with the following:
 
 
 ### What to do?
+* Edit pagespeed settings: Edit pagespeed to add/remove filters. 
+* Add your domains to pagespeed.conf
+
 * Create cache and log folders
-# Change ownership of the folders.
-
-
+* Change ownership of the folders.
 You can run the below bash script to create and chmod all these folders.
 ```
 for dir in /var/cache/nginx/  /var/cache/nginx/client /var/cache/nginx/scgi /var/cache/nginx/uwsgi /var/cache/nginx/fastcgi /var/cache/nginx/proxy /var/ngx_pagespeed_cache /var/log/nginx /var/log/pagespeed /var/ngx_pagespeed_cache /var/log/pagespeed
@@ -35,3 +36,6 @@ else
 fi
 done
 ```
+
+
+### Known Issues
