@@ -57,6 +57,7 @@
 		
 		if ($cache_uri != "null cache") {
 			add_header X-Cache_Debug "$cache_uri $cookie_nocache $arg_nocache$arg_comment $http_pragma $http_authorization";
+			add_header X-Cache $upstream_cache_status;
 			set $no_cache 0;
 		}
 	
