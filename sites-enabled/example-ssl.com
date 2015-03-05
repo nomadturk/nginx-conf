@@ -20,9 +20,10 @@ server {
   listen 443 ssl; # add spdy if you have nginx 1.6+
   listen [::]:443 ssl; spdy;
   
-  ssl on;
-  ssl_certificate_key /etc/ssl/cert/example.com.pem;
-  ssl_certificate /etc/ssl/cert/ca-bundle.pem;
+ # Enable below with your certificates
+ # ssl on;
+ # ssl_certificate_key /etc/ssl/cert/example.com.pem;		# Replace this with your certificate key
+ # ssl_certificate /etc/ssl/cert/ca-bundle.pem 			# Replace it with your ca-bundle.pem;
 
   # ssl_ciphers 'AES128+EECDH:AES128+EDH:!aNULL';
   # Backward compatible ciphers
