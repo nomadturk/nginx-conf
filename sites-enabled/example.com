@@ -74,7 +74,7 @@ server {
 	include h5bp/basic.conf;
 	
 	# Let's Include PageSpeed
-	include nomad-conf/pagespeed.add;
+#	include nomad-conf/pagespeed.add;
 
 	# PHP Settings
 	include nomad-conf/fastcgi.add;
