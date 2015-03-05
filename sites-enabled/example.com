@@ -31,8 +31,9 @@ server {
 	
 	#access_log	logs/host.access.log	main;
 	
+	# Enable gunzip if you have gunzip module compiled with nginx.
 	# http://nginx.com/resources/admin-guide/compression-and-decompression/
-	gunzip on;
+	# gunzip on;
 	
 	index	index.php index.html index.htm;
 
@@ -41,8 +42,8 @@ server {
 	# Remove auto listing of directories. 
 	autoindex off;
 	
-	# You can enable this for prettier directory listings if you enable autoindex.
-	fancyindex off;
+	# You can enable this for prettier directory listings if you enable autoindex. fancyindex module must be compiled with nginx.
+	# fancyindex off;
 	
 	# Set default charset as unicode.
 	charset utf-8;
