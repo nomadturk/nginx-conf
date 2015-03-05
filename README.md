@@ -16,7 +16,7 @@ It also uses https://github.com/h5bp/server-configs-nginx and a compilation of m
 ### Dealing with possible errors.
 ###### Error - Pagespeed
 **You might run into errors if you don't have ngx_pagespeed module.**
-* Solution: Manually disable pagespeed references or install nginx-extras package. If you are compiling your own nginx, make sure you have ngx_pagespeed in compile options.
+* Solution: Manually disable pagespeed references or install pagespeed. If you are compiling your own nginx, make sure you have ngx_pagespeed added as a module in compile options.
 
 ##### Error - Gunzip
 **You might run into errors if you don't have ngx_http_gunzip_filter_module**
