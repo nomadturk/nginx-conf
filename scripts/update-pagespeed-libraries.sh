@@ -19,4 +19,4 @@ curl -s "$URL" \
     | grep ModPagespeedLibrary \
     | while read library size hash url ; do
   echo "  pagespeed Library $size $hash $url;"
-done > /etc/nginx/conf.d/pagespeed_libraries.conf
+done > /etc/nginx/conf.d/pagespeed/pagespeed_libraries.conf
