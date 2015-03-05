@@ -1,25 +1,27 @@
-##Let's redirect www requests to non-www site.
-#server {
-#  # don't forget to tell on which port this server listens
-#  listen [::]:80;
-#  listen 80;
-#
-#  # listen on the www host
-#  #server_name www.example.com;
-#  # It should work OK, just in case it doesn't work the way it was intended, use the one above.
-#  server_name *.example.com;
-#
-#  # and redirect to the non-www host (declared below)
-#  # do no forget to replace example.com 
-#  return 301 $scheme://example.com$request_uri;
-#}
+#Let's redirect www requests to non-www site.
+server {
+  # don't forget to tell on which port this server listens
+  listen 80;
+  listen [::]:80;
+
+  # listen on the www host
+  server_name www.example.com;
+  
+  # The below config will redirect ALL subdomains to non-www site.
+  # If you don't have any other subdomains, you may enable this instead of the above one.
+  # server_name *.example.com;
+
+  # and redirect to the non-www host (declared below)
+  # do no forget to replace example.com 
+  return 301 $scheme://example.com$request_uri;
+}
 
 server {
-	listen     *:80;
-	# listen 80 deferred; # for Linux
-  	# listen 80 accept_filter=httpready; # for FreeBSD
-	# listen   [::]:80;
-	# listen   [::]:80 default_server ipv6only=off; ## listen for ipv6
+	listen     80 ;
+	listen   [::]:80;
+		# listen 80 deferred; # for Linux, might improve performance by reducing some formalities.
+		# listen 80 accept_filter=httpready; # for FreeBSD
+		# listen   [::]:80 ipv6only=on;  # For only IPv6
 	
 	# our primary server name is the first, aliases simply come after it. you can also include wildcards like *.example.com
   	server_name  example.com;
