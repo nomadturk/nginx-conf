@@ -17,6 +17,7 @@
 		add_header Content-Encoding gzip;
 		add_header Pragma public;
 		add_header Cache-Control "max-age=31536000, public";
+		add_header X-Cache $upstream_cache_status;
 	}
 	
 	# wordpress-w3-total-cache.conf
