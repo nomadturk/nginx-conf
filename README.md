@@ -10,15 +10,28 @@ My aim is to enable caching, SEO friendly URL's, Cloudflare support, adding h5bp
 
 It also uses https://github.com/h5bp/server-configs-nginx and a compilation of many tweaks.
 
+### Requirements
 
+Nginx 1.6 and above.
+nginx-extras or your own compilation with the following:
+* ngx_pagespeed (comes with nginx extras)
+* ngx_http_gunzip
 
 
 ### What to do?
-Some features come disabled by default. This is due to having different systems and different versions of nginx.
-This is an all purpose nginx template so for the sake of compatibility some settings are disabled.
+* Create cache and log folders
+# Change ownership of the folders.
 
-* Pagespeed settings: 1- Enable by uncommenting from within nginx.conf. Be sure to add your domains.  2- Enable pagespeed from within Example.com
 
-* Gunzip settings: In the example.com file uncomment it if you need it.
-
-* SPDY: For https sites, SPDY is a good addition but unfortunately you need nginx 1.6+ and it doesn't exist in some repos. So you have to enable it by adding "spdy" to the listen directive.
+You can run the below bash script to create and chmod all these folders.
+```
+for dir in /var/cache/nginx/  /var/cache/nginx/client /var/cache/nginx/scgi /var/cache/nginx/uwsgi /var/cache/nginx/fastcgi /var/cache/nginx/proxy /var/ngx_pagespeed_cache /var/log/nginx /var/log/pagespeed /var/ngx_pagespeed_cache /var/log/pagespeed
+do
+if [ ! -d $dir ]; then
+	mkdir -p $dir
+	chown -R  www-data:www-data $dir
+else
+	chown -R  www-data:www-data $dir
+fi
+done
+```
