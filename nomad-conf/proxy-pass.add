@@ -10,5 +10,11 @@
     proxy_intercept_errors on;
     proxy_pass http://127.0.0.1:8080;
     proxy_redirect default;
+    ## Proxy caching
     proxy_buffering on;
+    proxy_buffer_size 1k;
+    proxy_buffers 24 4k;
+    proxy_busy_buffers_size 8k;
+    proxy_max_temp_file_size 2048m;
+    proxy_temp_file_write_size 32k;
   }
