@@ -19,7 +19,7 @@ server {
 server {
 	listen	80 ;
 	listen	[::]:80;
-		# listen	80 deferred;				# for Linux, might improve performance by reducing some formalities.
+		# listen	80 deferred;			# for Linux, might improve performance by reducing some formalities.
 		# listen	80 accept_filter=httpready;	# for FreeBSD
 		# listen	[::]:80 ipv6only=on;		# For only IPv6
 	
