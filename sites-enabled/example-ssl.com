@@ -47,6 +47,7 @@ server {
   # cd /etc/ssl/certs
   # openssl dhparam -out dhparam.pem 4096
 
+  # let the browsers know that we only accept HTTPS
   add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";
   add_header X-Frame-Options DENY;
   add_header X-Content-Type-Options nosniff;
