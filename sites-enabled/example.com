@@ -62,40 +62,40 @@ server {
 	###############################################
 	
 	# Let's Include Cache settings
-	include /etc/nginx/nomad-conf/cachestatic.add;
+	include nomad-conf/cachestatic.add;
 	
 	# Preserve the port when redirects.
 	port_in_redirect off;
 	 
 	# Wordpress settings for /wordpress folder
-	include /etc/nginx/nomad-conf/wordpress.add;
+	include nomad-conf/wordpress.add;
 	 
-	# include /etc/nginx/security;
+	# include security;
 	
 	# Include the basic h5bp config set
-	include /etc/nginx/h5bp/basic.conf;
+	include h5bp/basic.conf;
 	
 	# Let's Include PageSpeed
-	include /etc/nginx/nomad-conf/pagespeed.add;
+	include nomad-conf/pagespeed.add;
 
 	# PHP Settings
-	include /etc/nginx/nomad-conf/fastcgi.add;
+	include nomad-conf/fastcgi.add;
 	
 	# Get real IP from Varnish and Cloudflare for Logging
-	include /etc/nginx/nomad-conf/realip.add;
+	include nomad-conf/realip.add;
 	
 	# Redirect server error pages to the static page /50x.html
-	include /etc/nginx/nomad-conf/serverror.add;
+	include nomad-conf/serverror.add;
 	 
 	# Deny access to htaccess files
-	include /etc/nginx/nomad-conf/deny-htaccess.add;
+	include nomad-conf/deny-htaccess.add;
 		
 	# Varnish probe 
-	include /etc/nginx/nomad-conf/probe.add;
+	include nomad-conf/probe.add;
 	
 	# Let us not log favicon and robots and whatever
-	include /etc/nginx/nomad-conf/donotlog.add;
+	include nomad-conf/donotlog.add;
 	
 	# Create an /nginx-status page. 
-	include /etc/nginx/nomad-conf/status-stub.add;
+	include nomad-conf/status-stub.add;
 }
