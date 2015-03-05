@@ -13,11 +13,10 @@ It also uses https://github.com/h5bp/server-configs-nginx and a compilation of m
 
 
 
-### Dealing with possible errors.
-###### Error - Pagespeed
-**You might run into errors if you don't have ngx_pagespeed module.**
-* Solution: Manually disable pagespeed references or install pagespeed. If you are compiling your own nginx, make sure you have ngx_pagespeed added as a module in compile options.
+### What to do?
+Some features come disabled by default. This is due to having different systems and different versions of nginx.
+This is an all purpose nginx template so for the sake of compatibility some settings are disabled.
 
-##### Error - Gunzip
-**You might run into errors if you don't have ngx_http_gunzip_filter_module**
-* Solution: Either disable the directive or include https://github.com/catap/ngx_http_gunzip_filter_module to your compilation.
+* Pagespeed settings: Enable by uncommenting from within nginx.conf. Be sure to add your domains.
+* Gunzip settings: In the example.com file uncomment it if you need it.
+* SPDY: For https sites, SPDY is a good addition but unfortunately you need nginx 1.6+ and it doesn't exist in some repos. So you have to enable it by adding "spdy" to the listen directive.
