@@ -7,6 +7,9 @@ server {
 	# listen on the www host
 	server_name www.example.com;
 	
+	# Preserve the port when redirects.
+	port_in_redirect off;
+	
 	# The below config will redirect ALL subdomains to non-www site.
 	# If you don't have any other subdomains, you may enable this instead of the above one.
 	# server_name *.example.com;
@@ -64,14 +67,9 @@ server {
 	# Let's Include Cache settings
 	include nomad-conf/cachestatic.add;
 	
-	# Preserve the port when redirects.
-	port_in_redirect off;
-	 
 	# Wordpress settings for /wordpress folder
 	include nomad-conf/wordpress.add;
 	 
-	# include security;
-	
 	# Include the basic h5bp config set
 	include h5bp/basic.conf;
 	
