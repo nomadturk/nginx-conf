@@ -71,8 +71,9 @@ server {
 	
 	#access_log	logs/host.access.log	main;
 	
+	# Enable gunzip if you have gunzip module compiled with nginx.
 	# http://nginx.com/resources/admin-guide/compression-and-decompression/
-	gunzip on;
+	# gunzip on;
 	
 	index	index.php index.html index.htm;
 
@@ -81,8 +82,8 @@ server {
 	# Remove auto listing of directories. 
 	autoindex off;
 	
-	# You can enable this for prettier directory listings if you enable autoindex.
-	fancyindex off;
+	# You can enable this for prettier directory listings if you enable autoindex. fancyindex module must be compiled with nginx.
+	# fancyindex off;
 	
 	# Set default charset as unicode.
 	charset utf-8;
@@ -101,40 +102,35 @@ server {
 	###############################################
 	
 	# Let's Include Cache settings
-	include /etc/nginx/nomad-conf/cachestatic.add;
+	include nomad-conf/cachestatic.add;
 	
-	# Preserve the port when redirects.
-	port_in_redirect off;
-	 
 	# Wordpress settings for /wordpress folder
-	include /etc/nginx/nomad-conf/wordpress.add;
+	include nomad-conf/wordpress.add;
 	 
-	# include /etc/nginx/security;
-	
 	# Include the basic h5bp config set
-	include /etc/nginx/h5bp/basic.conf;
+	include h5bp/basic.conf;
 	
 	# Let's Include PageSpeed
-	include /etc/nginx/nomad-conf/pagespeed.add;
+	include nomad-conf/pagespeed.add;
 
 	# PHP Settings
-	include /etc/nginx/nomad-conf/fastcgi.add;
+	include nomad-conf/fastcgi.add;
 	
 	# Get real IP from Varnish and Cloudflare for Logging
-	include /etc/nginx/nomad-conf/realip.add;
+	include nomad-conf/realip.add;
 	
 	# Redirect server error pages to the static page /50x.html
-	include /etc/nginx/nomad-conf/serverror.add;
+	include nomad-conf/serverror.add;
 	 
 	# Deny access to htaccess files
-	include /etc/nginx/nomad-conf/deny-htaccess.add;
+	include nomad-conf/deny-htaccess.add;
 		
 	# Varnish probe 
-	include /etc/nginx/nomad-conf/probe.add;
+	include nomad-conf/probe.add;
 	
 	# Let us not log favicon and robots and whatever
-	include /etc/nginx/nomad-conf/donotlog.add;
+	include nomad-conf/donotlog.add;
 	
 	# Create an /nginx-status page. 
-	include /etc/nginx/nomad-conf/status-stub.add;
+	include nomad-conf/status-stub.add;
 }
