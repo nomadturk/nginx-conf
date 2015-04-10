@@ -2,22 +2,34 @@
 server {
   # don't forget to tell on which port this server listens
   listen 80;
-  listen [::]:80 ipv6only on;
+  listen [::]:80 ipv6only=on;
   
-  listen 443 ssl spdy;
-  listen [::]:443 ssl spdy;
+  # listen on the www host
+  server_name example.com www.example.com;		# do no forget to replace example.com 
+ 
+  # and redirect to the https host (declared below)
+  return 301 https://example.com$request_uri;		# do no forget to replace example.com 
+}
 
+#Let's redirect www https requests to non-www site.
+server {
+  # don't forget to tell on which port this server listens
+  listen 443;
+  listen [::]:443 ipv6only=on;
+  
   # listen on the www host
   server_name www.example.com;
  
-  # and redirect to the non-www host (declared below)
+  # and redirect to the https host (declared below)
   # do no forget to replace example.com 
   return 301 https://example.com$request_uri;
 }
 
+########################################
+
 server {
   listen 443 ssl spdy;			#SPDY Requires nginx 1.6+
-  listen [::]:443 ssl spdy;
+  listen [::]:443 ssl spdy ipv6only=on;
   
  # Enable below with your certificates
  ssl on;
