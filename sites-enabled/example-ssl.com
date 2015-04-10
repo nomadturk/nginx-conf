@@ -1,19 +1,18 @@
-#Let's redirect www requests to non-www site.
+#Let's redirect http and www requests to non-www site.
 server {
   # don't forget to tell on which port this server listens
+  listen 80;
+  listen [::]:80 ipv6only on;
+  
   listen 443 ssl spdy;
   listen [::]:443 ssl spdy;
 
   # listen on the www host
   server_name www.example.com;
-  
-  # The below config will redirect ALL subdomains to non-www site.
-  # If you don't have any other subdomains, you may enable this instead of the above one.
-  # server_name *.example.com;
-
+ 
   # and redirect to the non-www host (declared below)
   # do no forget to replace example.com 
-  return 301 $scheme://example.com$request_uri;
+  return 301 https://example.com$request_uri;
 }
 
 server {
@@ -21,16 +20,17 @@ server {
   listen [::]:443 ssl spdy;
   
  # Enable below with your certificates
- # ssl on;
- # ssl_certificate_key /etc/ssl/cert/example.com.pem;		# Replace this with your certificate key
- # ssl_certificate /etc/ssl/cert/ca-bundle.pem 			# Replace it with your ca-bundle.pem;
+ ssl on;
+ ssl_certificate_key /etc/ssl/cert/example.com.key;		# Replace this with your certificate key
+ ssl_certificate /etc/ssl/cert/example.com.bundle.crt 			# Replace it with your ca-bundle.pem;
 
   # ssl_ciphers 'AES128+EECDH:AES128+EDH:!aNULL';
   # Backward compatible ciphers
   ssl_ciphers "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
+  ssl_prefer_server_ciphers on;
 
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-  ssl_session_cache shared:SSL:10m;
+  ssl_session_cache shared:SSL:50m;
   ssl_session_timeout 20m;
   keepalive_timeout   70;
   
@@ -42,13 +42,15 @@ server {
   ssl_stapling_verify on; # Requires nginx => 1.3.7
   resolver 8.8.4.4 8.8.8.8 valid=300s;
   resolver_timeout 10s;
+#  ssl_stapling_file  /etc/ssl/domain.bundle.pem.ocsp;
 
-  ssl_prefer_server_ciphers on;
-  ssl_dhparam /etc/ssl/certs/dhparam.pem;
-  # cd /etc/ssl/certs
+  # For Diffie Hellman Key Exchange:
+  ssl_dhparam /var/www/vhosts/cloud.golgeli.net/ssl/dhparam.pem;
+  # cd /var/www/vhosts/cloud.golgeli.net/ssl/
   # openssl dhparam -out dhparam.pem 4096
 
   # let the browsers know that we only accept HTTPS
+  # HSTS (ngx_http_headers_module is required) (15768000 seconds = 6 months)
   add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload";
   add_header X-Frame-Options DENY;
   add_header X-Content-Type-Options nosniff;
@@ -70,7 +72,8 @@ server {
 	# Path for the website
 	root	/var/www/;
 	
-	#access_log	logs/host.access.log	main;
+	access_log	logs/host.access.log	main;
+	error_log	logs/host.error.log	main;
 	
 	# Enable gunzip if you have gunzip module compiled with nginx.
 	# http://nginx.com/resources/admin-guide/compression-and-decompression/
