@@ -2,7 +2,7 @@
 server {
 	# don't forget to tell on which port this server listens
 	listen 80;
-	#listen [::]:80;
+	listen [::]:80 ipv6only=on;
 
 	# listen on the www host
 	server_name www.example.com;
@@ -21,7 +21,7 @@ server {
 
 server {
 	listen	80 ;
-	#listen	[::]:80;
+	listen	[::]:80 ipv6only=on;
 		# listen	80 deferred;			# for Linux, might improve performance by reducing some formalities.
 		# listen	80 accept_filter=httpready;	# for FreeBSD
 		# listen	[::]:80 ipv6only=on;		# For only IPv6
@@ -32,7 +32,8 @@ server {
 	# Path for the website
 	root	/var/www/;
 	
-	#access_log	logs/host.access.log	main;
+	access_log	logs/host.access.log	main;
+	error_log	logs/host.error.log	main;
 	
 	# Enable gunzip if you have gunzip module compiled with nginx.
 	# http://nginx.com/resources/admin-guide/compression-and-decompression/
